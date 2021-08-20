@@ -1,0 +1,147 @@
+using System;
+
+namespace 简单显示日历
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            #region ==判断是不是闰年==
+            static int oryear(int year)
+            {
+                if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
+                {
+                    return 1;  //是闰年
+                }
+                else
+                {
+                    return 0;   //不是闰年
+                }
+            }
+            #endregion
+            #region ==获取某年某月某日是星期几==
+            static int GetWeekByDay(int year, int month, int day)
+            {
+                DateTime dt = new DateTime(year, month, day);
+                return (int)dt.DayOfWeek;
+            }
+            #endregion
+            #region ==获取一个月多少天==
+            static int DayOfMonth(int year, int month)
+            {
+                int day = 0;
+                int yeard = oryear(year);
+                switch (month)
+                {
+                    case 1:
+                        day = 31;
+                        break;
+                    case 2:
+                        if (yeard == 1) day = 29;
+                        if (yeard == 0) day = 28;
+                        break;
+                    case 3:
+                        day = 31;
+                        break;
+                    case 4:
+                        day = 30;
+                        break;
+                    case 5:
+                        day = 31;
+                        break;
+                    case 6:
+                        day = 30;
+                        break;
+                    case 7:
+                        day = 31;
+                        break;
+                    case 8:
+                        day = 31;
+                        break;
+                    case 9:
+                        day = 30;
+                        break;
+                    case 10:
+                        day = 31;
+                        break;
+                    case 11:
+                        day = 30;
+                        break;
+                    case 12:
+                        day = 31;
+                        break;
+                }
+                return day;
+            }
+            #endregion
+            #region ==日历开头空出==
+            static void ShowBlender(int num)
+            {
+                switch (num)
+                {
+                    case 1:
+                        Console.Write("\t");
+                        break;
+                    case 2:
+                        Console.Write("\t\t");
+                        break;
+                    case 3:
+                        Console.Write("\t\t\t");
+                        break;
+                    case 4:
+                        Console.Write("\t\t\t\t");
+                        break;
+                    case 5:
+                        Console.Write("\t\t\t\t\t");
+                        break;
+                    case 6:
+                        Console.Write("\t\t\t\t\t\t");
+                        break;
+                }
+
+            }
+            #endregion
+            #region ==显示日历==
+            static void Show()
+            {
+                try
+                {
+                    Console.Write("请输入您要看哪一年的日历：");                 //用户自定义年份
+                    int year = Convert.ToInt32(Console.ReadLine());
+                    Console.Clear();
+                    for (int i = 1; i < 13; i++)                                //循环确定月份        
+                    {
+                        //int year=2021                                         //固定定义第几年
+                        int month = i;                                          //随循环确定月份
+                        Console.WriteLine(year + "年" + month + "月");          //打印固定开头
+                        Console.WriteLine("日\t一\t二\t三\t四\t五\t六");        //打印固定开头
+                        int TotalDay = DayOfMonth(year, month);                 //总共天数
+                        int FirstDay = 1;                                       //每月第一天
+                        int num = GetWeekByDay(year, month, FirstDay);          //判断每月第一天星期几
+                        ShowBlender(num);                                       //根据每月第一天星期几判断要在开头空出多少\t
+                        for (int m = 1; m <= TotalDay; m++)                     //打印总共的天数
+                        {
+                            Console.Write(m + "\t");                            //显示天
+                            if (GetWeekByDay(year, month, m) == 6)              //到星期六进行回车
+                            {
+                                Console.Write("\n");
+                            }
+
+                        }
+                        Console.Write("\n");                                    //一个月结束，进行空行
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("请输入正确的年份");
+                    Console.WriteLine();
+                    Show();
+                }
+                    
+            }
+            #endregion
+            Show();
+            Console.ReadKey();
+        }
+    }
+}
