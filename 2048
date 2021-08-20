@@ -1,0 +1,241 @@
+using System;
+
+namespace _2048
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            #region ==左移去零==
+            static int[,] LeftMove(int[,] n)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    for (int i = 0; i < n.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < n.GetLength(1) - 1; j++)
+                        {
+                            int temp;
+                            if (n[i, j] == 0)
+                            {
+                                temp = n[i, j];
+                                n[i, j] = n[i, j + 1];
+                                n[i, j + 1] = temp;
+                            }
+                        }
+                    }
+                }
+                return n;
+            }
+            #endregion
+            #region ==上移去零==
+            static int[,] UpMove(int[,] n)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    for (int i = 0; i < n.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < n.GetLength(1) - 1; j++)
+                        {
+                            int temp;
+                            if (n[j, i] == 0)
+                            {
+                                temp = n[j, i];
+                                n[j, i] = n[j + 1, i];
+                                n[j + 1, i] = temp;
+                            }
+                        }
+                    }
+                }
+                return n;
+            }
+            #endregion
+            #region ==右移去零==
+            static int[,] RightMove(int[,] n)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    for (int i = 0; i < n.GetLength(0); i++)
+                    {
+                        for (int j = n.GetLength(1) - 1; j > 0; j--)
+                        {
+                            int temp;
+                            if (n[i, j] == 0)
+                            {
+                                temp = n[i, j];
+                                n[i, j] = n[i, j - 1];
+                                n[i, j - 1] = temp;
+                            }
+                        }
+                    }
+                }
+                return n;
+            }
+            #endregion
+            #region ==下移去零==
+            static int[,] DownMove(int[,] n)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    for (int i = 0; i < n.GetLength(0); i++)
+                    {
+                        for (int j = n.GetLength(1) - 1; j > 0; j--)
+                        {
+                            int temp;
+                            if (n[j, i] == 0)
+                            {
+                                temp = n[j, i];
+                                n[j, i] = n[j - 1, i];
+                                n[j - 1, i] = temp;
+                            }
+                        }
+                    }
+                }
+                return n;
+            }
+            #endregion
+            #region  ==控制==
+            static int[,] ControlMap(int[,] n, int num)
+            {
+                if (num == 8)
+                {
+                    UpMove(n);
+                    for (int j = 0; j < n.GetLength(0); j++)
+                    {
+                        for (int i = 0; i < n.GetLength(1); i++)
+                        {
+                            for (int k = i; k < n.GetLength(0) - 1; k++)
+                            {
+                                if (n[i, j] == n[k + 1, j])
+                                {
+                                    int sum = n[i, j] + n[k + 1, j];
+                                    n[i, j] = sum;
+                                    n[k + 1, j] = 0;
+
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    UpMove(n);
+                    return n;
+                }
+                if (num == 2)
+                {
+                    DownMove(n);
+                    for (int j = 0; j < n.GetLength(0); j++)
+                    {
+                        for (int i = n.GetLength(1) - 1; i > 0; i--)
+                        {
+                            for (int k = i; k > 0; k--)
+                            {
+                                if (n[i, j] == n[k - 1, j])
+                                {
+                                    int sum = n[i, j] + n[k - 1, j];
+                                    n[i, j] = sum;
+                                    n[k - 1, j] = 0;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    DownMove(n);
+                    return n;
+                }
+                if (num == 4)
+                {
+                    LeftMove(n);
+                    for (int i = 0; i < n.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < n.GetLength(1); j++)
+                        {
+                            for (int k = j; k < n.GetLength(0) - 1; k++)
+                            {
+                                if (n[i, j] == n[i, k + 1])
+                                {
+                                    int sum = n[i, j] + n[i, k + 1];
+                                    n[i, j] = sum;
+                                    n[i, k + 1] = 0;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    LeftMove(n);
+                    return n;
+                }
+                if (num == 6)
+                {
+                    RightMove(n);
+                    for (int i = 0; i < n.GetLength(0); i++)
+                    {
+                        for (int j = n.GetLength(1) - 1; j > 0; j--)
+                        {
+                            for (int k = j; k > 0; k--)
+                            {
+                                if (n[i, j] == n[i, k - 1])
+                                {
+                                    int sum = n[i, j] + n[i, k - 1];
+                                    n[i, j] = sum;
+                                    n[i, k - 1] = 0;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    RightMove(n);
+                    return n;
+                }
+                return n;
+            }
+            #endregion
+            #region  ==加载地图==
+            static void Show(int[,] n)
+            {
+                Random rd = new Random();
+                int a = rd.Next(0, 4);
+                int b = rd.Next(0, 4);
+                int c = rd.Next(0, 4);
+                int d = rd.Next(0, 4);
+                if (n[a, b] == 0) n[a, b] = 2;
+                if (n[c, d] == 0) n[c, d] = 2;
+                Console.WriteLine("┌───────┌───────┌───────┌───────┐");
+                for (int i = 0; i < n.GetLength(0); i++)
+                {
+                    for (int j = 0; j < n.GetLength(1); j++)
+                    {
+                        Console.Write("│   " + n[i, j] + "\t");
+                    }
+                    Console.WriteLine("│");
+                    Console.WriteLine("│───────│───────│───────│───────│");
+                }
+                //Console.Write("└───────└───────└───────└───────┘");
+            }
+            #endregion
+            #region  ==游戏主程序==
+            int[,] map = new int[,]                                         //初始化地图
+            {
+                {0,0,0,0 },
+                {0,0,0,0 },
+                {0,0,0,0 },
+                {0,0,0,0 }
+            };
+            Show(map);
+            while (true)
+            {
+                Console.WriteLine();
+                Console.Write("请输入要移动的方向：");
+                int Control = Convert.ToInt32(Console.ReadLine());
+                if (Control == 0)
+                {
+                    break;
+                }
+                ControlMap(map, Control);
+                Show(map);
+            }
+            Console.WriteLine("\n游戏已经成功退出....");
+            Console.ReadKey();
+            #endregion
+        }
+    }
+}
